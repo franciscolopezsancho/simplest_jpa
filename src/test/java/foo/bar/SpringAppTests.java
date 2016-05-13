@@ -1,26 +1,39 @@
 package foo.bar;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.junit.Assert.assertEquals;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import foo.bar.bo.EmpEntity;
+import foo.bar.config.PersistenceJPAConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:spring-config.xml")
+@TransactionConfiguration(transactionManager="transactionManager", defaultRollback=true)
+@Transactional
+@ContextConfiguration(classes = {PersistenceJPAConfig.class})
 public class SpringAppTests {
 
     @PersistenceContext
     EntityManager em;
 
-
-
     @Test
     public void shouldRetrieveDataFromDB(){
-        assertEquals("Johnson",em.find(EmpEntity.class,1).getEname());
+    	EmpEntity emp1 = new EmpEntity();
+    	emp1.setEmpno(1);
+    	String name = "John";
+    	emp1.setEname(name);
+    	em.persist(emp1);
+        assertEquals(name,em.find(EmpEntity.class,1).getEname());
+        assertEquals(1,em.createNamedQuery("findAll").getResultList().size());
     }
+    
+    
 }
