@@ -54,7 +54,7 @@ public class PersistenceJPAConfig{
    Properties additionalProperties() {
       Properties properties = new Properties();
       properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-      properties.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect4");
+      properties.setProperty("hibernate.dialect", "foo.bar.dialect.SQLiteDialect4");
       return properties;
    }
 }
